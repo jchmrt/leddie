@@ -121,4 +121,8 @@ impl LeddieScreen {
             Ok(())
         }
     }
+
+    pub fn set_brightness(&mut self, brightness: u8) {
+        self.controller.set_brightness(0, brightness);
+    }
 }

@@ -43,6 +43,7 @@ enum CommandType {
     SetPixel = 0,
     SetScreen = 1,
     Render = 2,
+    SetBrightness = 3,
 }
 
 #[derive(Debug)]
@@ -54,6 +55,8 @@ pub enum Command {
     // },
 
     Render,
+
+    SetBrightness { brightness: u8 },
 }
 
 #[derive(Debug)]
@@ -123,12 +126,21 @@ impl LeddieReader {
         })
     }
 
+    fn parse_set_brightness(&mut self) -> Result<Command, Box<dyn Error>> {
+        let mut bytes: [u8; 1] = [0];
+        self.file.read_exact(&mut bytes)?;
+        Ok(Command::SetBrightness {
+            brightness: bytes[0],
+        })
+    }
+
     fn parse(&mut self) -> Result<Command, Box<dyn Error>> {
         let cmd_type = self.parse_command_type()?;
         match cmd_type {
             CommandType::SetPixel => self.parse_set_pixel(),
             CommandType::SetScreen => Err(Box::new(ParseError)), // TODO: implement
             CommandType::Render => Ok(Command::Render),
+            CommandType::SetBrightness => self.parse_set_brightness(),
         }
     }
 
@@ -146,6 +158,9 @@ impl LeddieReader {
                 }
                 Ok(Command::Render) => {
                     self.scr.render();
+                }
+                Ok(Command::SetBrightness { brightness }) => {
+                    self.scr.set_brightness(brightness);
                 }
                 _ => {
                     println!("parse error in command");

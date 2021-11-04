@@ -32,6 +32,7 @@ pipe "/tmp/leddie":
 
 - set_pixel: start with a byte 0, then 5 bytes for x, y, r, g and b.
 - render: a single byte 2
+- set_brightnes: start with a byte 3, then a byte for the brightness
 
 This project is licensed under the AGPL version 3 or (at your option) any later
 version. See the file COPYING for more information.
