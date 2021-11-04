@@ -32,3 +32,6 @@ pipe "/tmp/leddie":
 
 - set_pixel: start with a byte 0, then 5 bytes for x, y, r, g and b.
 - render: a single byte 2
+
+This project is licensed under the AGPL version 3 or (at your option) any later
+version. See the file COPYING for more information.
