@@ -1,0 +1,34 @@
+        _____
+         ___
+          _          _             _     _ _
+      _________     | |    ___  __| | __| (_) ___   -x--x--x--x--x--x--x-.
+     /......,--.    | |   / _ \/ _` |/ _` | |/ _ \  ,x--x--x--x--x--x--x-'
+    /.....././  \   | |__|  __/ (_| | (_| | |  __/  `x--x--x--x--x--x--x-.
+   /________/    \  |_____\___|\__,_|\__,_|_|\___|  ,x--x--x--x--x--x--x-'
+                  \________________________________/
+
+                 SIMPLE & FAST LED WINDOW CONTROLLER
+
+--------------------------------------------------------------------------------
+
+I have an array of 15 by 10 leds on my window with approx. 10cm between each
+led. My goal is to make an interactive display out of these which passerby's can
+interact with through a website.
+
+I'm driving this LED window from a Raspberry Pi B+. Luckily there is a library
+which can run drive this many LEDs quite easily and efficiently:
+rs_w281x. However, it requires root access to use the PWM module.
+
+It is of course not wise to run a web server as root. Furthermore, I noticed
+that the library was not very fast in python. Therefore, I decided to write a
+small daemon that could control the LEDs based on a few commands over a named
+pipe. Since this could be a much smaller project, the attack surface is
+reduced. I choose to write this program in Rust because of the memory safety
+guarantees this provides (although I do use an unsafe block to create the named
+pipe).
+
+I call this controller Leddie. It currently accepts two commands on the named
+pipe "/tmp/leddie":
+
+- set_pixel: start with a byte 0, then 5 bytes for x, y, r, g and b.
+- render: a single byte 2
