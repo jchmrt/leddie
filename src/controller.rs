@@ -26,6 +26,7 @@ pub struct LeddieScreen {
     width: u8,
     height: u8,
     controller: Controller,
+    mirror: bool,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -84,11 +85,16 @@ impl LeddieScreen {
             width,
             height,
             controller,
+            mirror: true,
         }
     }
 
     pub fn render(&mut self) {
         self.controller.render().expect("Error rendering LEDs");
+    }
+
+    pub fn mirror(&mut self) {
+        self.mirror = !self.mirror;
     }
 
     pub fn set_pixel(&mut self, coord: Coordinate, color: Color) -> Result<(), CoordError> {
@@ -108,7 +114,7 @@ impl LeddieScreen {
             let i = (self.width * self.height) - coord.y * self.width - 1;
 
             // If 1, show to outside. If 0, show to inside.
-            let mirror_type = 1;
+            let mirror_type = if self.mirror { 1 } else { 0 };
 
             let i = if coord.y % 2 == mirror_type {
                 i - coord.x

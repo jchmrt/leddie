@@ -44,6 +44,7 @@ enum CommandType {
     SetScreen = 1,
     Render = 2,
     SetBrightness = 3,
+    Mirror = 4,
 }
 
 #[derive(Debug)]
@@ -57,6 +58,8 @@ pub enum Command {
     Render,
 
     SetBrightness { brightness: u8 },
+
+    Mirror,
 }
 
 #[derive(Debug)]
@@ -141,6 +144,7 @@ impl LeddieReader {
             CommandType::SetScreen => Err(Box::new(ParseError)), // TODO: implement
             CommandType::Render => Ok(Command::Render),
             CommandType::SetBrightness => self.parse_set_brightness(),
+            CommandType::Mirror => Ok(Command::Mirror),
         }
     }
 
@@ -161,6 +165,9 @@ impl LeddieReader {
                 }
                 Ok(Command::SetBrightness { brightness }) => {
                     self.scr.set_brightness(brightness);
+                }
+                Ok(Command::Mirror) => {
+                    self.scr.mirror();
                 }
                 _ => {
                     println!("parse error in command");
