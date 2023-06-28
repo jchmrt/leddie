@@ -111,7 +111,42 @@ impl LeddieScreen {
         } else {
             let leds = self.controller.leds_mut(0);
 
-            let i = (self.width * self.height) - coord.y * self.width - 1;
+
+            /* We need to change this code because I made a mistake
+             * while wiring up the new layout at my new place.
+
+
+             /------------------  ---> ending
+             \-----------------\
+             /-----------------/
+             \-----------------\
+             /-----------------/
+             \-----------------\
+             /-----------------/
+             \-----------------\
+             /-----------------/
+             \---------------------\
+  input-->    -----------------\   |
+             /-----------------/   |
+             \-----------------\   |
+             /-----------------/   |
+             \--------------------/
+
+            Basically the input starts on the 5th row from the bottom
+            and goes downwards. Then it moves up to the 6th row. From
+            there it moves normally upwards.
+
+
+             */
+            let h = if coord.y >= 10 {
+                // we are below the horrible mistake
+                10 + (15 - coord.y)
+            } else {
+                // we are above the horrible mistake
+                coord.y
+            };
+
+            let i = (self.width * self.height) - h * self.width - 1;
 
             // If 1, show to outside. If 0, show to inside.
             let mirror_type = if self.mirror { 1 } else { 0 };

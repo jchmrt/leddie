@@ -23,8 +23,8 @@ mod reader;
 use controller::LeddieScreen;
 use reader::LeddieReader;
 
-const SCR_WIDTH: u8 = 15;
-const SCR_HEIGHT: u8 = 10;
+const SCR_WIDTH: u8 = 10;
+const SCR_HEIGHT: u8 = 15;
 
 fn main() {
     let scr = LeddieScreen::new(SCR_WIDTH, SCR_HEIGHT);
